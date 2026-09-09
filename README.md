@@ -6,9 +6,9 @@ The project models a small virtual company with network segmentation, identity s
 
 ## Interactive guides
 
-- [English interactive guide](./soc-proxmox-complete-guide-en.html)
-- [Arabic interactive guide](./soc-proxmox-complete-guide.html)
-- [GitHub Pages landing page](./index.html)
+- [English interactive guide](https://ameencys.github.io/soc-proxmox-lab/soc-proxmox-complete-guide-en.html)
+- [Arabic interactive guide](https://ameencys.github.io/soc-proxmox-lab/soc-proxmox-complete-guide.html)
+- [GitHub Pages landing page](https://ameencys.github.io/soc-proxmox-lab/)
 
 ## Technology stack
 
