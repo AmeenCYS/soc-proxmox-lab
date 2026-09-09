@@ -88,6 +88,7 @@ lsblk -o NAME,SIZE,TYPE,FSTYPE,MOUNTPOINTS</code></pre></div>
     <section class="section searchable" id="bridges">
       <div class="phase">المرحلة 04</div><h2>إنشاء Bridges والشبكة الافتراضية</h2>
       <div class="grid three"><div class="card"><h3>vmbr0</h3><p>External/OOB. يحمل إدارة Proxmox وpfSense WAN وNB-GW01.</p></div><div class="card"><h3>vmbr1</h3><p>Internal trunk بلا IP أو physical port، وVLAN-aware للزونز 10–60.</p></div><div class="card"><h3>vmbr2</h3><p>Monitor bridge بلا IP، يوصل نسخة الترافيك إلى Sniff NIC في SO01.</p></div></div>
+      <div class="callout"><strong>طريقة القراءة:</strong> الراوتر وإدارة Proxmox وpfSense WAN وNB-GW01 هي أجهزة متجاورة على نفس Layer 2 داخل vmbr0، وليست سلسلة تمر عبر IP إدارة Proxmox. VLAN 10 هي منطقة Admin Jumpbox التي تبدأ منها الإدارة عبر قواعد pfSense؛ عنوان PVE نفسه يبقى OOB في تصميم المختبر.</div>
       <p>استخدم واجهة Proxmox: <code>Node → System → Network → Create → Linux Bridge</code>. المثال التالي مرجعي؛ استبدل <code>eno1</code> باسم NIC الحقيقي من <code>ip -br link</code>.</p>
       <div class="copy-wrap"><button class="copy" type="button">نسخ</button><pre><code>auto lo
 iface lo inet loopback
@@ -224,6 +225,7 @@ sudo tar -O -xvf wazuh-install-files.tar wazuh-install-files/wazuh-passwords.txt
       <div class="phase">المرحلة 11</div><h2>Security Onion والرؤية الشبكية</h2>
       <ol class="steps"><li>أنشئ SO01 بـCPU type host، 24 GB RAM، 300 GB disk وNICين: الإدارة على vmbr1 tag 40، والالتقاط على vmbr2 بلا tag.</li><li>أقلع ISO واتبع المثبت الرسمي واختر Standalone للمختبر.</li><li>عيّن management IP = 10.10.40.20/24، gateway 10.10.40.1 وDNS 10.10.30.10.</li><li>حدد NIC الثانية كـmonitor/sniff فقط: لا IP ولا gateway.</li><li>اسمح بإدارة Security Onion من MGMT/NetBird فقط.</li><li>ابدأ بمصدر mirror واحد: واجهة pfSense الداخلية. بعد نجاحها أضف east-west sources عند الحاجة.</li><li>افحص Capture Loss وZeek Loss والتخزين يوميًا في البداية.</li></ol>
       <div class="callout danger"><strong>لا تستخدم أسماء tap تخمينية.</strong> أسماء واجهات Proxmox تُنشأ من VMID وNIC وتتغير عند تعديل العتاد. استخرجها بعد تشغيل FW01 وSO01، ثم طبّق mirroring وفق توثيق Security Onion/Proxmox. في بيئة إنتاج استخدم physical TAP أو switch SPAN.</div>
+      <div class="callout warn"><strong>مهم:</strong> إنشاء vmbr2 وربط Sniff NIC به لا ينسخ الترافيك تلقائيًا؛ يجب تكوين Mirror/TAP/SPAN صريح من واجهة pfSense الداخلية أو مصدر الالتقاط المعتمد.</div>
       <div class="copy-wrap"><button class="copy" type="button">نسخ</button><pre><code># على Proxmox: جمع معلومات فقط، بدون تغيير
 qm config 100 | grep '^net'
 qm config 150 | grep '^net'
