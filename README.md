@@ -4,11 +4,11 @@ An interactive, bilingual architecture and implementation blueprint for a comple
 
 The project models a small virtual company with network segmentation, identity services, endpoint and network monitoring, threat intelligence, SOAR automation, controlled attack simulation, and Zero Trust remote access.
 
-## Interactive guides
+## Interactive website
 
-- [English interactive guide](https://ameencys.github.io/soc-proxmox-lab/soc-proxmox-complete-guide-en.html)
-- [Arabic interactive guide](https://ameencys.github.io/soc-proxmox-lab/soc-proxmox-complete-guide.html)
-- [GitHub Pages landing page](https://ameencys.github.io/soc-proxmox-lab/)
+Open the project landing page, then choose the Arabic or English interactive guide:
+
+### [Open the SOC Proxmox Lab website](https://ameencys.github.io/soc-proxmox-lab/)
 
 ## Technology stack
 
