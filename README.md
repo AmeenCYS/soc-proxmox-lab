@@ -6,7 +6,7 @@ The project models a small virtual company with network segmentation, identity s
 
 ## Interactive website
 
-Open the project landing page, then choose the Arabic or English interactive guide:
+Open the project landing page, choose Arabic or English, then select the detailed step-by-step implementation runbook or the original interactive architecture blueprint:
 
 ### [Open the SOC Proxmox Lab website](https://ameencys.github.io/soc-proxmox-lab/)
 

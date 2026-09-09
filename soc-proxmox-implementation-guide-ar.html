@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="دليل تنفيذي عربي خطوة بخطوة لبناء مختبر SOC كامل على Proxmox VE.">
+  <title>دليل التنفيذ خطوة بخطوة | SOC Proxmox Lab</title>
+  <style>
+    :root{--bg:#07111f;--panel:#0d1b2d;--panel2:#12243a;--text:#edf6ff;--muted:#9bb0c7;--line:#29445e;--cyan:#22d3ee;--blue:#4f8cff;--green:#3ddc97;--yellow:#f6c85f;--red:#ff6b7d;--radius:16px;--shadow:0 18px 50px rgba(0,0,0,.25)}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(circle at 85% 0,#123256 0,transparent 35%),var(--bg);color:var(--text);font-family:"Segoe UI",Tahoma,Arial,sans-serif;line-height:1.8}a{color:var(--cyan)}code,pre{font-family:Consolas,"Courier New",monospace}.layout{display:grid;grid-template-columns:290px minmax(0,1fr);min-height:100vh}.sidebar{position:sticky;top:0;height:100vh;overflow:auto;padding:22px 18px;background:rgba(5,13,24,.96);border-left:1px solid var(--line)}.brand{display:flex;gap:11px;align-items:center;margin-bottom:18px}.mark{display:grid;place-items:center;width:44px;height:44px;border-radius:13px;background:linear-gradient(135deg,var(--blue),var(--cyan));font-weight:900;color:#03101b}.brand small,.muted{color:var(--muted)}.progress{height:8px;background:#172b40;border-radius:99px;overflow:hidden;margin:8px 0}.progress>span{display:block;width:0;height:100%;background:linear-gradient(90deg,var(--blue),var(--green));transition:.2s}.search{width:100%;margin:12px 0;padding:11px 12px;color:var(--text);background:#0b1828;border:1px solid var(--line);border-radius:10px}.nav{display:grid;gap:3px}.nav a{text-decoration:none;color:#bad0e5;padding:7px 9px;border-radius:8px;font-size:14px}.nav a:hover,.nav a.active{background:#142a42;color:#fff}.sidebar-actions{display:grid;gap:8px;margin-top:18px}.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid var(--line);border-radius:10px;padding:9px 12px;background:#102338;color:#fff;text-decoration:none;cursor:pointer;font:inherit}.btn.primary{background:linear-gradient(135deg,#2869df,#0e9fb5);border:0}.content{width:min(1180px,100%);margin:auto;padding:38px clamp(18px,4vw,58px) 80px}.hero{padding:34px;border:1px solid var(--line);border-radius:22px;background:linear-gradient(135deg,rgba(25,67,108,.8),rgba(11,27,45,.9));box-shadow:var(--shadow)}.eyebrow{color:var(--cyan);font-weight:800;letter-spacing:.08em}.hero h1{font-size:clamp(30px,5vw,56px);line-height:1.16;margin:8px 0}.hero p{max-width:900px;color:#c7d8e9;font-size:18px}.chips{display:flex;flex-wrap:wrap;gap:8px}.chip{padding:6px 10px;background:#0a1c2e;border:1px solid #31506c;border-radius:99px;color:#cce4f4}.section{scroll-margin-top:20px;margin-top:28px;padding:26px;border:1px solid var(--line);border-radius:var(--radius);background:rgba(13,27,45,.94);box-shadow:var(--shadow)}.section h2{margin:0 0 6px;font-size:27px}.section h3{margin-top:22px;color:#d8ebfa}.section-head{display:flex;justify-content:space-between;gap:18px;align-items:start}.phase{color:var(--cyan);font-size:13px;font-weight:800}.grid{display:grid;gap:13px}.two{grid-template-columns:repeat(2,minmax(0,1fr))}.three{grid-template-columns:repeat(3,minmax(0,1fr))}.card{padding:16px;background:var(--panel2);border:1px solid #2b4964;border-radius:13px}.card h3{margin:0 0 6px}.callout{margin:14px 0;padding:13px 15px;border-right:4px solid var(--blue);border-radius:10px;background:#10253c}.callout.ok{border-color:var(--green)}.callout.warn{border-color:var(--yellow)}.callout.danger{border-color:var(--red)}.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:12px}table{width:100%;border-collapse:collapse;min-width:760px}th,td{padding:10px 12px;text-align:right;border-bottom:1px solid var(--line);vertical-align:top}th{background:#112741;color:#dff5ff}tr:last-child td{border-bottom:0}.steps{counter-reset:step;display:grid;gap:12px;padding:0;list-style:none}.steps>li{counter-increment:step;position:relative;padding:14px 58px 14px 14px;background:#0b1a2b;border:1px solid #28445f;border-radius:12px}.steps>li:before{content:counter(step);position:absolute;right:14px;top:14px;width:30px;height:30px;display:grid;place-items:center;border-radius:9px;background:#173c61;color:var(--cyan);font-weight:900}.check{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px dashed #29445e}.check:last-child{border:0}.check input{margin-top:7px;accent-color:var(--green);transform:scale(1.15)}.check.done span{text-decoration:line-through;color:#7890a6}.copy-wrap{position:relative;direction:ltr;text-align:left;margin:12px 0}.copy{position:absolute;top:8px;right:8px;border:1px solid #3b5c78;background:#17314b;color:#fff;border-radius:7px;padding:5px 9px;cursor:pointer}pre{margin:0;padding:42px 15px 15px;overflow:auto;background:#050d16;border:1px solid #29445e;border-radius:11px;color:#d5f5ff;line-height:1.55;white-space:pre}.gate{margin-top:15px;padding:14px;border:1px solid #247c61;border-radius:11px;background:rgba(28,112,82,.18)}details{margin:12px 0;border:1px solid var(--line);border-radius:11px;background:#0b1a2a}summary{cursor:pointer;padding:12px 14px;font-weight:800;color:#d9f5ff}details>div{padding:0 14px 14px}.source-list{display:grid;gap:8px}.source-list a{padding:10px 12px;border:1px solid var(--line);border-radius:9px;background:#0a1a2a;text-decoration:none}.hidden{display:none!important}.toast{position:fixed;left:22px;bottom:22px;padding:10px 14px;background:#123a32;border:1px solid var(--green);border-radius:9px;opacity:0;transform:translateY(10px);transition:.2s;z-index:99}.toast.show{opacity:1;transform:none}@media(max-width:980px){.layout{display:block}.sidebar{position:relative;height:auto;border-left:0;border-bottom:1px solid var(--line)}.nav{grid-template-columns:repeat(2,minmax(0,1fr))}.content{padding-top:22px}.three,.two{grid-template-columns:1fr}}@media print{.sidebar,.copy,.btn{display:none!important}.layout{display:block}.content{width:100%;padding:0}.section,.hero{box-shadow:none;break-inside:avoid}body{background:white;color:black}.section,.hero,.card{background:white;border-color:#bbb}a{color:#075b9b}}
+  </style>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="brand"><div class="mark">SOC</div><div><strong>Implementation Runbook</strong><br><small>Proxmox VE Lab · عربي</small></div></div>
+    <div id="progressText" class="muted">0% مكتمل</div><div class="progress"><span id="progressBar"></span></div>
+    <input id="search" class="search" type="search" placeholder="ابحث داخل خطوات التنفيذ..." aria-label="بحث">
+    <nav class="nav" aria-label="مراحل التنفيذ">
+      <a href="#start">00 البداية</a><a href="#inventory">01 التجهيز</a><a href="#downloads">02 التنزيلات</a><a href="#proxmox">03 Proxmox</a><a href="#bridges">04 الشبكات</a><a href="#pfsense">05 pfSense</a><a href="#vlans">06 VLANs</a><a href="#vms">07 إنشاء VMs</a><a href="#ad">08 AD وWindows</a><a href="#linux">09 Linux</a><a href="#wazuh">10 Wazuh</a><a href="#onion">11 Security Onion</a><a href="#opencti">12 OpenCTI</a><a href="#n8n">13 n8n</a><a href="#netbird">14 NetBird</a><a href="#integrations">15 التكامل</a><a href="#tests">16 الاختبارات</a><a href="#backup">17 التقوية والنسخ</a><a href="#handover">18 التسليم</a>
+    </nav>
+    <div class="sidebar-actions"><a class="btn primary" href="index.html">الصفحة الرئيسية</a><a class="btn" href="soc-proxmox-complete-guide.html">مخطط المعمارية الحالي</a><button class="btn" id="printBtn" type="button">طباعة / PDF</button><button class="btn" id="resetBtn" type="button">تصفير التقدم</button></div>
+  </aside>
+
+  <main class="content">
+    <header class="hero" id="start">
+      <div class="eyebrow">RUNBOOK · BUILD · VERIFY · DOCUMENT</div>
+      <h1>تنفيذ مختبر SOC كامل خطوة بخطوة</h1>
+      <p>هذا الملف هو دليل التطبيق العملي المكمل لمخطط المعمارية. نفّذ المراحل بالترتيب، ولا تنتقل للمرحلة التالية حتى تنجح بوابة التحقق. ضع علامة على كل مهمة؛ سيُحفظ تقدمك محليًا في المتصفح.</p>
+      <div class="chips"><span class="chip">10 VMs</span><span class="chip">6 VLANs</span><span class="chip">Proxmox VE</span><span class="chip">pfSense</span><span class="chip">Wazuh</span><span class="chip">Security Onion</span><span class="chip">OpenCTI</span><span class="chip">n8n</span><span class="chip">NetBird</span></div>
+    </header>
+
+    <section class="section searchable" id="inventory">
+      <div class="phase">المرحلة 01</div><h2>التجهيز قبل لمس السيرفر</h2>
+      <div class="callout danger"><strong>تنبيه:</strong> احتفظ بوصول Console محلي أو iDRAC/iLO قبل تغيير شبكة Proxmox. خطأ واحد في bridge أو gateway قد يقطع الإدارة عن السيرفر.</div>
+      <div class="grid two">
+        <div class="card"><h3>المواصفات العملية</h3><ul><li>128 GB RAM كحد عملي، و160–192 GB مفضّل.</li><li>2 TB NVMe كحد أدنى، و3–4 TB أو قرص PCAP منفصل مفضّل.</li><li>NIC واحدة تكفي للمختبر الافتراضي؛ اثنتان أفضل للفصل.</li><li>فعّل Intel VT-x/VT-d أو AMD-V/IOMMU من BIOS.</li></ul></div>
+        <div class="card"><h3>سجل المشروع</h3><ul><li>اكتب اسم عقدة Proxmox وعنوان الإدارة والبوابة.</li><li>أنشئ Password Manager vault للمشروع.</li><li>حدد مالك كل خدمة وتاريخ تثبيتها.</li><li>لا تضع كلمات المرور أو tokens داخل GitHub.</li></ul></div>
+      </div>
+      <h3>ورقة العناوين المعتمدة</h3>
+      <div class="table-wrap"><table><thead><tr><th>المكوّن</th><th>العنوان</th><th>الشبكة</th><th>ملاحظة</th></tr></thead><tbody>
+        <tr><td>Router</td><td>192.168.1.1</td><td>External</td><td>البوابة الحالية</td></tr><tr><td>Proxmox</td><td>192.168.1.10</td><td>vmbr0</td><td>الإدارة :8006</td></tr><tr><td>pfSense WAN</td><td>192.168.1.2</td><td>vmbr0</td><td>يفضل DHCP reservation أو static خارج pool</td></tr><tr><td>NB-GW01</td><td>192.168.1.20</td><td>vmbr0</td><td>NetBird routing peer</td></tr><tr><td>DC01</td><td>10.10.30.10</td><td>VLAN 30</td><td>AD DS وDNS</td></tr><tr><td>CLIENT01</td><td>10.10.20.10</td><td>VLAN 20</td><td>Windows 11 Pro</td></tr><tr><td>WEB01</td><td>10.10.50.10</td><td>VLAN 50</td><td>Ubuntu DMZ</td></tr><tr><td>WAZUH01</td><td>10.10.40.10</td><td>VLAN 40</td><td>SIEM/XDR</td></tr><tr><td>SO01</td><td>10.10.40.20</td><td>VLAN 40 + sniff</td><td>NDR/PCAP</td></tr><tr><td>SOAR01</td><td>10.10.40.30</td><td>VLAN 40</td><td>n8n</td></tr><tr><td>CTI01</td><td>10.10.40.40</td><td>VLAN 40</td><td>OpenCTI</td></tr><tr><td>KALI01</td><td>10.10.60.10</td><td>VLAN 60</td><td>اختبارات مصرح بها فقط</td></tr>
+      </tbody></table></div>
+      <label class="check"><input type="checkbox" data-task="inventory"><span>سجلت مواصفات السيرفر والعناوين ووسيلة استعادة الوصول.</span></label>
+      <div class="gate"><strong>بوابة النجاح:</strong> عندك نسخة مكتوبة من IP plan، ووصول Console، ومساحة تكفي للـVMs قبل البدء.</div>
+    </section>
+
+    <section class="section searchable" id="downloads">
+      <div class="phase">المرحلة 02</div><h2>تنزيل ملفات التثبيت والتحقق منها</h2>
+      <p>حمّل من المواقع الرسمية فقط. بعض مكونات المشروع ليست ISO، بل تُثبت فوق Ubuntu بواسطة Docker أو حزمة رسمية.</p>
+      <div class="table-wrap"><table><thead><tr><th>المنتج</th><th>الملف</th><th>مكان الاستخدام</th><th>المصدر</th></tr></thead><tbody>
+        <tr><td>Proxmox VE</td><td>ISO</td><td>السيرفر الفيزيائي</td><td><a href="https://www.proxmox.com/en/downloads" target="_blank" rel="noopener">Official download</a></td></tr>
+        <tr><td>pfSense CE</td><td>ISO/ISO.GZ</td><td>FW01</td><td><a href="https://www.pfsense.org/download/" target="_blank" rel="noopener">Official download</a></td></tr>
+        <tr><td>Windows Server 2022</td><td>ISO</td><td>DC01</td><td><a href="https://www.microsoft.com/en-us/evalcenter/download-windows-server-2022" target="_blank" rel="noopener">Microsoft Evaluation Center</a></td></tr>
+        <tr><td>Windows 11</td><td>ISO</td><td>CLIENT01</td><td><a href="https://www.microsoft.com/en-us/software-download/windows11" target="_blank" rel="noopener">Microsoft</a></td></tr>
+        <tr><td>VirtIO</td><td>virtio-win.iso</td><td>تعريفات Windows</td><td><a href="https://pve.proxmox.com/wiki/Windows_VirtIO_Drivers" target="_blank" rel="noopener">Proxmox wiki</a></td></tr>
+        <tr><td>Ubuntu Server 24.04</td><td>ISO</td><td>Linux VMs</td><td><a href="https://releases.ubuntu.com/noble/" target="_blank" rel="noopener">Ubuntu</a></td></tr>
+        <tr><td>Kali Linux</td><td>Installer ISO</td><td>KALI01</td><td><a href="https://www.kali.org/get-kali/" target="_blank" rel="noopener">Kali</a></td></tr>
+        <tr><td>Security Onion</td><td>ISO</td><td>SO01</td><td><a href="https://securityonionsolutions.com/software/" target="_blank" rel="noopener">Security Onion</a></td></tr>
+        <tr><td>Wazuh</td><td>ليس ISO</td><td>Ubuntu على WAZUH01</td><td><a href="https://documentation.wazuh.com/current/quickstart.html" target="_blank" rel="noopener">Quickstart</a></td></tr>
+        <tr><td>OpenCTI</td><td>ليس ISO</td><td>Ubuntu + Docker على CTI01</td><td><a href="https://docs.opencti.io/latest/deployment/installation/" target="_blank" rel="noopener">Installation</a></td></tr>
+        <tr><td>n8n</td><td>ليس ISO</td><td>Ubuntu + Docker على SOAR01</td><td><a href="https://docs.n8n.io/deploy/host-n8n/install-options/install-using-docker-compose" target="_blank" rel="noopener">Docker Compose</a></td></tr>
+        <tr><td>NetBird</td><td>ليس ISO</td><td>Agent على NB-GW01</td><td><a href="https://docs.netbird.io/get-started/install" target="_blank" rel="noopener">Install</a></td></tr>
+      </tbody></table></div>
+      <ol class="steps"><li>قارن SHA256 الموجود في صفحة المنتج مع الملف الذي نزلته.</li><li>سمّ الملفات بوضوح ولا تعدل الاسم إذا كنت ستوثق الـhash.</li><li>ارفع ملفات ISO لاحقًا إلى <code>local → ISO Images</code>، وليس إلى مساحة VM disks.</li></ol>
+      <div class="copy-wrap"><button class="copy" type="button">نسخ</button><pre><code># على Linux: استبدل FILE.iso باسم الملف
+sha256sum FILE.iso
+
+# على Windows PowerShell
+Get-FileHash .\FILE.iso -Algorithm SHA256</code></pre></div>
+      <label class="check"><input type="checkbox" data-task="downloads"><span>نزّلت الملفات الرسمية وسجلت SHA256 لكل ISO.</span></label>
+      <div class="gate"><strong>بوابة النجاح:</strong> كل ISO مطلوب موجود والـhash مطابق للمصدر الرسمي.</div>
+    </section>
+
+    <section class="section searchable" id="proxmox">
+      <div class="phase">المرحلة 03</div><h2>تثبيت Proxmox VE وإعداد الأساس</h2>
+      <ol class="steps"><li>اكتب ISO على USB، أقلع السيرفر، واختر Install Proxmox VE.</li><li>اختر قرص النظام بعناية. إذا عندك قرص PCAP مستقل فلا تستخدمه للنظام.</li><li>اضبط الدولة والمنطقة الزمنية وkeyboard، ثم بريدًا إداريًا حقيقيًا وكلمة مرور طويلة.</li><li>اختر NIC الإدارة، hostname مثل <code>pve01.corp.lab</code>، IP <code>192.168.1.10/24</code>، gateway <code>192.168.1.1</code> وDNS متاح مؤقتًا.</li><li>بعد الإقلاع افتح <code>https://192.168.1.10:8006</code> من شبكة موثوقة وسجل الدخول بـroot.</li><li>اضبط NTP، افحص التخزين، وثبّت التحديثات من المستودع المناسب لترخيصك.</li><li>فعّل MFA لحساب الإدارة، وأنشئ حساب مسؤول منفصل بدل الاستخدام اليومي لـroot.</li></ol>
+      <div class="copy-wrap"><button class="copy" type="button">نسخ</button><pre><code>pveversion -v
+ip -br address
+ip route
+timedatectl
+lsblk -o NAME,SIZE,TYPE,FSTYPE,MOUNTPOINTS</code></pre></div>
+      <div class="callout warn">لا تنسخ أوامر مستودعات Proxmox من مدونات قديمة. اختر enterprise إذا عندك اشتراك، أو no-subscription حسب الدليل الرسمي الحالي؛ لا تفعّل المستودعين لنفس الحزم.</div>
+      <label class="check"><input type="checkbox" data-task="proxmox"><span>Proxmox محدث، الوقت صحيح، والتخزين والإدارة يعملان.</span></label>
+      <div class="gate"><strong>بوابة النجاح:</strong> واجهة Proxmox تعمل بعد reboot، و<code>pveversion -v</code> لا يعرض أخطاء حزم.</div>
+    </section>
+
+    <section class="section searchable" id="bridges">
+      <div class="phase">المرحلة 04</div><h2>إنشاء Bridges والشبكة الافتراضية</h2>
+      <div class="grid three"><div class="card"><h3>vmbr0</h3><p>External/OOB. يحمل إدارة Proxmox وpfSense WAN وNB-GW01.</p></div><div class="card"><h3>vmbr1</h3><p>Internal trunk بلا IP أو physical port، وVLAN-aware للزونز 10–60.</p></div><div class="card"><h3>vmbr2</h3><p>Monitor bridge بلا IP، يوصل نسخة الترافيك إلى Sniff NIC في SO01.</p></div></div>
+      <p>استخدم واجهة Proxmox: <code>Node → System → Network → Create → Linux Bridge</code>. المثال التالي مرجعي؛ استبدل <code>eno1</code> باسم NIC الحقيقي من <code>ip -br link</code>.</p>
+      <div class="copy-wrap"><button class="copy" type="button">نسخ</button><pre><code>auto lo
+iface lo inet loopback
+
+iface eno1 inet manual
+
+auto vmbr0
+iface vmbr0 inet static
+    address 192.168.1.10/24
+    gateway 192.168.1.1
+    bridge-ports eno1
+    bridge-stp off
+    bridge-fd 0
+
+auto vmbr1
+iface vmbr1 inet manual
+    bridge-ports none
+    bridge-stp off
+    bridge-fd 0
+    bridge-vlan-aware yes
+    bridge-vids 10 20 30 40 50 60
+
+auto vmbr2
+iface vmbr2 inet manual
+    bridge-ports none
+    bridge-stp off
+    bridge-fd 0</code></pre></div>
+      <div class="callout danger">طبّق التغيير من Console المحلي. لا تستخدم <code>ifreload -a</code> عن بعد إذا لم تكن لديك وسيلة استعادة.</div>
+      <label class="check"><input type="checkbox" data-task="bridges"><span>أنشأت vmbr0 وvmbr1 وvmbr2 وتأكدت أن vmbr1 VLAN-aware.</span></label>
+      <div class="gate"><strong>بوابة النجاح:</strong> Proxmox ما زال متاحًا على 192.168.1.10، وvmbr1/vmbr2 لا يحملان IP أو gateway.</div>
+    </section>
+
+    <section class="section searchable" id="pfsense">
+      <div class="phase">المرحلة 05</div><h2>إنشاء وتثبيت pfSense FW01</h2>
+      <div class="table-wrap"><table><thead><tr><th>الإعداد</th><th>القيمة</th></tr></thead><tbody><tr><td>VMID / Name</td><td>100 / FW01</td></tr><tr><td>CPU / RAM / Disk</td><td>2 cores (type host) / 4 GB / 20 GB</td></tr><tr><td>OS</td><td>Other، pfSense ISO</td></tr><tr><td>net0</td><td>vmbr0، VirtIO، WAN، بلا VLAN tag</td></tr><tr><td>net1</td><td>vmbr1، VirtIO، trunk، بلا VLAN tag</td></tr></tbody></table></div>
+      <ol class="steps"><li>أنشئ VM وثبّت pfSense، ثم أزل ISO بعد أول reboot.</li><li>من Console عيّن <code>vtnet0</code> كـWAN و<code>vtnet1</code> كـLAN/trunk. لا تنشئ VLANs في شاشة التعيين الأولى إذا ستكمل من Web UI.</li><li>اضبط WAN على <code>192.168.1.2/24</code> والبوابة <code>192.168.1.1</code>. بما أن WAN شبكة خاصة، ألغِ Block private networks لهذه الواجهة فقط.</li><li>ضع LAN مؤقتًا على <code>10.10.10.1/24</code> حتى تدخل الواجهة من VM مؤقتة على VLAN 10.</li><li>افتح Web UI وشغّل Wizard، غيّر admin password، NTP وDNS.</li><li>من <code>System → Advanced → Networking</code> تحقق من تعطيل Hardware Checksum Offloading مع VirtIO، ثم reboot.</li><li>اترك NAT التلقائي في البداية، ولا تفتح أي Port Forward للوحات الإدارة.</li></ol>
+      <label class="check"><input type="checkbox" data-task="pfsense"><span>FW01 يقلع، WAN يصل للإنترنت، وواجهة الإدارة الداخلية تعمل.</span></label>
+      <div class="gate"><strong>بوابة النجاح:</strong> من VM مؤقتة على VLAN 10 تستطيع فتح pfSense، وpfSense يستطيع ping للبوابة والإنترنت.</div>
+    </section>
+
+    <section class="section searchable" id="vlans">
+      <div class="phase">المرحلة 06</div><h2>إنشاء VLANs وDHCP وسياسات الجدار</h2>
+      <ol class="steps"><li>اذهب إلى <code>Interfaces → Assignments → VLANs</code> وأنشئ VLAN 10/20/30/40/50/60 على parent <code>vtnet1</code>.</li><li>عيّن كل VLAN كواجهة، فعّلها، وسمّها MGMT/USERS/SERVERS/SOC/DMZ/ATTACK.</li><li>استخدم gateways: <code>10.10.X.1/24</code>. لا تضع upstream gateway على الواجهات الداخلية.</li><li>فعّل DHCP فقط على USERS من 10.10.20.100–200 وعلى ATTACK من 10.10.60.100–150. الخوادم static.</li><li>أنشئ aliases: <code>DC01</code>، <code>SOC_SERVERS</code>، <code>DMZ_SERVERS</code>، <code>MGMT_PORTS</code>.</li><li>ابنِ القواعد من الأكثر تحديدًا للأقل، وفعّل logging على deny rules.</li></ol>
+      <div class="table-wrap"><table><thead><tr><th>المصدر</th><th>الوجهة</th><th>السماح المبدئي</th><th>الرفض الصريح</th></tr></thead><tbody>
+        <tr><td>MGMT</td><td>Proxmox/SOC/Servers</td><td>8006, 443, 22, 3389, 5678, 8080 حسب الأصل</td><td>أي وجهة غير إدارية</td></tr><tr><td>USERS</td><td>DC01</td><td>DNS وAD؛ اسمح إلى DC01 بالكامل أثناء البناء ثم قيّد بعد الاختبار</td><td>MGMT وSOC وATTACK</td></tr><tr><td>SERVERS</td><td>WAZUH01 / Internet</td><td>1514,1515 وDNS/NTP/updates</td><td>MGMT وATTACK</td></tr><tr><td>SOC</td><td>Endpoints/APIs</td><td>الإدارة وجمع البيانات حسب الحاجة فقط</td><td>أي تدفق غير موثق</td></tr><tr><td>DMZ</td><td>DNS/NTP/Wazuh</td><td>53,123,1514,1515 والـupdates المؤقتة</td><td>بدء اتصال إلى USERS/SERVERS/MGMT</td></tr><tr><td>ATTACK</td><td>WEB01</td><td>80/443 للاختبارات المصرح بها</td><td>MGMT وSOC وInternet إلا وقت تحديث مؤقت</td></tr>
+      </tbody></table></div>
+      <details><summary>ملاحظة مهمة عن منافذ Active Directory</summary><div><p>الانضمام والعمل عبر VLANs يحتاج DNS وKerberos وLDAP/LDAPS وSMB وRPC endpoint mapper ومنافذ RPC الديناميكية. للمختبر: اسمح USERS → DC01 أثناء التأسيس، تحقق من الانضمام وGPO، ثم قلص القاعدة تدريجيًا باستخدام توثيق Microsoft واختبارات فعلية بدل قائمة ناقصة تكسر الدومين.</p></div></details>
+      <label class="check"><input type="checkbox" data-task="vlans"><span>أنشأت VLANs والقواعد واختبرت السماح والرفض من جهاز مؤقت.</span></label>
+      <div class="gate"><strong>بوابة النجاح:</strong> كل VLAN تصل لبوابتها؛ ATTACK لا تصل إلى MGMT/SOC؛ والإنترنت متاح فقط حيث سمحت.</div>
+    </section>
+
+    <section class="section searchable" id="vms">
+      <div class="phase">المرحلة 07</div><h2>إنشاء الـVMs بالترتيب الصحيح</h2>
+      <div class="table-wrap"><table><thead><tr><th>الترتيب</th><th>VMID</th><th>الاسم</th><th>الموارد</th><th>NIC</th></tr></thead><tbody><tr><td>1</td><td>105</td><td>NB-GW01</td><td>2C / 4G / 20G</td><td>vmbr0</td></tr><tr><td>2</td><td>110</td><td>DC01</td><td>4C / 8G / 100G</td><td>vmbr1 tag 30</td></tr><tr><td>3</td><td>120</td><td>CLIENT01</td><td>4C / 8G / 80G</td><td>vmbr1 tag 20</td></tr><tr><td>4</td><td>130</td><td>WEB01</td><td>2C / 4G / 50G</td><td>vmbr1 tag 50</td></tr><tr><td>5</td><td>140</td><td>WAZUH01</td><td>4C / 8G / 100G</td><td>vmbr1 tag 40</td></tr><tr><td>6</td><td>150</td><td>SO01</td><td>4C / 24G / 300G</td><td>tag 40 + vmbr2 sniff</td></tr><tr><td>7</td><td>160</td><td>SOAR01</td><td>2C / 4G / 40G</td><td>vmbr1 tag 40</td></tr><tr><td>8</td><td>165</td><td>CTI01</td><td>8C / 24G / 250G</td><td>vmbr1 tag 40</td></tr><tr><td>9</td><td>170</td><td>KALI01</td><td>4C / 4G / 80G</td><td>vmbr1 tag 60</td></tr></tbody></table></div>
+      <h3>قاعدة موحدة لكل VM</h3><ol class="steps"><li>CPU type = host للأنظمة الثقيلة، SCSI controller = VirtIO SCSI Single، NIC = VirtIO.</li><li>ثبّت QEMU Guest Agent داخل الضيف ثم فعّله من Options في Proxmox.</li><li>الخوادم static IP، الوقت من NTP موثوق، وhostname مطابق للجدول.</li><li>بعد التحديث واختبار الشبكة خذ snapshot باسم <code>clean-baseline</code>. الـsnapshot ليس backup.</li></ol>
+      <label class="check"><input type="checkbox" data-task="vms"><span>أنشأت VMs وربطت كل NIC بالـbridge والـVLAN الصحيحين.</span></label>
+      <div class="gate"><strong>بوابة النجاح:</strong> قبل تثبيت التطبيقات، كل VM ترى gateway وDNS المتوقعين ولا ترى الزونز المحظورة.</div>
+    </section>
+
+    <section class="section searchable" id="ad">
+      <div class="phase">المرحلة 08</div><h2>Windows Server 2022 وWindows 11</h2>
+      <h3>DC01 — تثبيت الدومين</h3>
+      <ol class="steps"><li>ثبّت Windows Server 2022 Desktop Experience مع Windows ISO وVirtIO ISO موصولين.</li><li>إذا لم يظهر القرص، اختر Load Driver وحدد تعريف <code>vioscsi</code> x64؛ بعد الدخول ثبّت VirtIO Guest Tools.</li><li>ضع IP 10.10.30.10/24، gateway 10.10.30.1، وDNS مؤقتًا 127.0.0.1 بعد تثبيت DNS.</li><li>غيّر الاسم إلى DC01 ثم ثبّت AD DS وأنشئ forest باسم <code>corp.lab</code> وNetBIOS باسم CORP.</li><li>أنشئ OUs: Servers, Workstations, Users, Admins, Service Accounts، ثم حساب مستخدم عادي وحساب إداري منفصل.</li><li>اضبط DNS forwarders، الوقت، Advanced Audit Policy، PowerShell logging وWindows Defender.</li></ol>
+      <div class="copy-wrap"><button class="copy" type="button">نسخ</button><pre><code># PowerShell كمسؤول على DC01
+Rename-Computer -NewName "DC01" -Restart
+
+# بعد إعادة التشغيل
+Install-WindowsFeature AD-Domain-Services -IncludeManagementTools
+Install-ADDSForest -DomainName "corp.lab" -DomainNetbiosName "CORP" -InstallDNS</code></pre></div>
+      <h3>CLIENT01 — الانضمام للدومين</h3>
+      <ol class="steps"><li>أنشئ Windows 11 VM بنمط UEFI/q35 مع EFI disk وTPM 2.0، واختر Windows 11 Pro.</li><li>ثبّت VirtIO tools وQEMU Agent، وعيّن IP 10.10.20.10/24، gateway 10.10.20.1، DNS الوحيد 10.10.30.10.</li><li>تحقق من <code>nslookup corp.lab</code> ثم انضم للدومين وأعد التشغيل.</li><li>سجل الدخول بحساب CORP عادي وتحقق من تطبيق GPO.</li></ol>
+      <div class="copy-wrap"><button class="copy" type="button">نسخ</button><pre><code>Resolve-DnsName corp.lab -Server 10.10.30.10
+Add-Computer -DomainName "corp.lab" -Credential "CORP\Administrator" -Restart
+
+# بعد العودة
+gpupdate /force
+gpresult /r
+nltest /dsgetdc:corp.lab</code></pre></div>
+      <label class="check"><input type="checkbox" data-task="ad"><span>DC01 يعمل، CLIENT01 منضم، وDNS/GPO وتسجيل الدخول ناجحة.</span></label>
+      <div class="gate"><strong>بوابة النجاح:</strong> مستخدم CORP يسجل الدخول إلى CLIENT01، و<code>nltest</code> يجد DC01 بدون استخدام DNS خارجي.</div>
+    </section>
+
+    <section class="section searchable" id="linux">
+      <div class="phase">المرحلة 09</div><h2>تجهيز Ubuntu وKali</h2>
+      <p>كرر baseline على NB-GW01 وWEB01 وWAZUH01 وSOAR01 وCTI01 مع IP مختلف. استخدم DNS الداخلي بعد جاهزية DC01.</p>
+      <div class="copy-wrap"><button class="copy" type="button">نسخ</button><pre><code># Ubuntu baseline
+sudo apt update && sudo apt full-upgrade -y
+sudo apt install -y qemu-guest-agent curl ca-certificates gnupg jq unzip chrony
+sudo systemctl enable --now qemu-guest-agent chrony
+hostnamectl
+ip -br address
+ip route
+resolvectl status
+timedatectl</code></pre></div>
+      <details><summary>مثال Netplan لـWEB01</summary><div><div class="copy-wrap"><button class="copy" type="button">نسخ</button><pre><code>network:
+  version: 2
+  ethernets:
+    ens18:
+      addresses: [10.10.50.10/24]
+      routes:
+        - to: default
+          via: 10.10.50.1
+      nameservers:
+        addresses: [10.10.30.10]</code></pre></div><p>تحقق باسم الواجهة أولًا، ثم نفّذ <code>sudo netplan try</code> قبل <code>sudo netplan apply</code>.</p></div></details>
+      <h3>WEB01</h3><div class="copy-wrap"><button class="copy" type="button">نسخ</button><pre><code>sudo apt install -y nginx
+echo 'SOC Lab WEB01' | sudo tee /var/www/html/index.html
+sudo systemctl enable --now nginx
+curl -I http://127.0.0.1</code></pre></div>
+      <h3>KALI01</h3><p>ثبّت Kali Installer، IP 10.10.60.10/24، gateway 10.10.60.1، واترك الوصول إلى WEB01 فقط. لا تخزن مفاتيح أو أدوات هجومية على Proxmox host.</p>
+      <label class="check"><input type="checkbox" data-task="linux"><span>كل Linux VM محدثة، QEMU Agent يعمل، والـIP/DNS/NTP صحيحة.</span></label>
+      <div class="gate"><strong>بوابة النجاح:</strong> WEB01 يعرض صفحة الاختبار من CLIENT01، وKALI01 لا تصل إلى MGMT أو SOC.</div>
+    </section>
+
+    <section class="section searchable" id="wazuh">
+      <div class="phase">المرحلة 10</div><h2>تثبيت Wazuh وربط الأجهزة</h2>
+      <ol class="steps"><li>ثبت Ubuntu 24.04 على WAZUH01 بعنوان 10.10.40.10، وطبّق baseline.</li><li>نفّذ current Wazuh all-in-one assistant واحفظ credentials الناتجة خارج السيرفر.</li><li>افتح Dashboard من MGMT فقط على <code>https://10.10.40.10</code>.</li><li>من Dashboard اختر Deploy new agent وانسخ الأمر الذي يولده إصدارك لكل Windows/Linux host.</li><li>أنشئ groups: Windows-Servers, Windows-Clients, Linux-Servers, DMZ، ثم تحقق من agent status.</li><li>فعّل FIM وSCA وvulnerability detection تدريجيًا؛ لا تغيّر كل السياسات دفعة واحدة.</li><li>بعد ثبات النسخة، عطّل repository التلقائي كما يوصي Quickstart لتجنب ترقية غير مقصودة، وخطط للترقيات.</li></ol>
+      <div class="copy-wrap"><button class="copy" type="button">نسخ</button><pre><code>curl -sO https://packages.wazuh.com/4.14/wazuh-install.sh
+sudo bash ./wazuh-install.sh -a
+
+# عرض كلمات المرور التي ولّدها المثبت
+sudo tar -O -xvf wazuh-install-files.tar wazuh-install-files/wazuh-passwords.txt</code></pre></div>
+      <div class="callout warn">أمر 4.14 مطابق للـQuickstart وقت إعداد هذا الدليل. قبل التنفيذ راجع الرابط الرسمي؛ إذا تغيّر الإصدار استخدم أمر الصفحة الحالية ولا تغيّر الرقم عشوائيًا.</div>
+      <details><summary>استقبال Syslog من pfSense</summary><div><p>أضف listener داخل <code>/var/ossec/etc/ossec.conf</code> ثم أرسل من pfSense: <code>Status → System Logs → Settings → Remote Logging</code>. اسمح UDP 514 من عنوان pfSense فقط.</p><div class="copy-wrap"><button class="copy" type="button">نسخ</button><pre><code>&lt;remote&gt;
+  &lt;connection&gt;syslog&lt;/connection&gt;
+  &lt;port&gt;514&lt;/port&gt;
+  &lt;protocol&gt;udp&lt;/protocol&gt;
+  &lt;allowed-ips&gt;192.168.1.2/32&lt;/allowed-ips&gt;
+&lt;/remote&gt;</code></pre></div><p>بعد النسخ الاحتياطي والتحقق من XML: <code>sudo systemctl restart wazuh-manager</code>.</p></div></details>
+      <label class="check"><input type="checkbox" data-task="wazuh"><span>Wazuh يعمل وتظهر DC01 وCLIENT01 وWEB01 كـActive.</span></label>
+      <div class="gate"><strong>بوابة النجاح:</strong> اختبار تغيير ملف على WEB01 ومحاولة تسجيل دخول فاشلة على CLIENT01 ينتجان أحداثًا قابلة للبحث.</div>
+    </section>
+
+    <section class="section searchable" id="onion">
+      <div class="phase">المرحلة 11</div><h2>Security Onion والرؤية الشبكية</h2>
+      <ol class="steps"><li>أنشئ SO01 بـCPU type host، 24 GB RAM، 300 GB disk وNICين: الإدارة على vmbr1 tag 40، والالتقاط على vmbr2 بلا tag.</li><li>أقلع ISO واتبع المثبت الرسمي واختر Standalone للمختبر.</li><li>عيّن management IP = 10.10.40.20/24، gateway 10.10.40.1 وDNS 10.10.30.10.</li><li>حدد NIC الثانية كـmonitor/sniff فقط: لا IP ولا gateway.</li><li>اسمح بإدارة Security Onion من MGMT/NetBird فقط.</li><li>ابدأ بمصدر mirror واحد: واجهة pfSense الداخلية. بعد نجاحها أضف east-west sources عند الحاجة.</li><li>افحص Capture Loss وZeek Loss والتخزين يوميًا في البداية.</li></ol>
+      <div class="callout danger"><strong>لا تستخدم أسماء tap تخمينية.</strong> أسماء واجهات Proxmox تُنشأ من VMID وNIC وتتغير عند تعديل العتاد. استخرجها بعد تشغيل FW01 وSO01، ثم طبّق mirroring وفق توثيق Security Onion/Proxmox. في بيئة إنتاج استخدم physical TAP أو switch SPAN.</div>
+      <div class="copy-wrap"><button class="copy" type="button">نسخ</button><pre><code># على Proxmox: جمع معلومات فقط، بدون تغيير
+qm config 100 | grep '^net'
+qm config 150 | grep '^net'
+bridge link | grep -E 'tap100|tap150|fwbr|vmbr2'
+
+# داخل SO01: تحقق أن sniff NIC بلا IP
+ip -br address
+sudo tcpdump -ni &lt;SNIFF_INTERFACE&gt; -c 20</code></pre></div>
+      <label class="check"><input type="checkbox" data-task="onion"><span>SO01 يستقبل packets على sniff NIC وتظهر Zeek/Suricata events.</span></label>
+      <div class="gate"><strong>بوابة النجاح:</strong> افتح WEB01 من CLIENT01 ثم ابحث في Security Onion عن 10.10.20.10 و10.10.50.10 وترى الاتصال.</div>
+    </section>
+
+    <section class="section searchable" id="opencti">
+      <div class="phase">المرحلة 12</div><h2>OpenCTI على CTI01</h2>
+      <ol class="steps"><li>جهز CTI01: Ubuntu 24.04، 8 vCPU، 24 GB RAM، 250 GB، IP 10.10.40.40.</li><li>ثبّت Docker Engine وCompose plugin من مستودع Docker الرسمي، وليس حزمة عشوائية.</li><li>استنسخ مستودع OpenCTI Docker الرسمي وانسخ <code>.env.sample</code> إلى <code>.env</code>.</li><li>غيّر كل password، وأنشئ UUIDv4 صحيحًا لـadmin token وكل connector ID، وأنشئ encryption key طويل.</li><li>طبّق <code>vm.max_map_count=1048575</code> بشكل دائم.</li><li>شغّل stack، راقب health وlogs، ولا تفعّل connectors كثيرة قبل ثبات الـcore.</li><li>أضف MITRE ATT&amp;CK connector أولًا، ثم مصدر CTI موثوق واحد، ولكل connector token مستقل.</li><li>اقصر UI/API على SOC/MGMT أو NetBird، ثم ضع reverse proxy داخليًا مع TLS.</li></ol>
+      <div class="copy-wrap"><button class="copy" type="button">نسخ</button><pre><code>sudo sysctl -w vm.max_map_count=1048575
+echo 'vm.max_map_count=1048575' | sudo tee /etc/sysctl.d/99-opencti.conf
+
+git clone https://github.com/OpenCTI-Platform/docker.git ~/opencti-docker
+cd ~/opencti-docker
+cp .env.sample .env
+
+# أنشئ القيم ولا تطبع ملف .env في التوثيق
+uuidgen
+openssl rand -base64 32
+
+# بعد تحرير .env وتغيير كل القيم الافتراضية
+sudo docker compose config
+sudo docker compose up -d
+sudo docker compose ps
+sudo docker compose logs --tail=100</code></pre></div>
+      <div class="callout warn">لا تستخدم <code>changeme</code> أو admin token مشترك. لا ترفع <code>.env</code> إلى GitHub. ثبّت إصدار image محدد بعد نجاح التجربة وقبل الاعتماد.</div>
+      <label class="check"><input type="checkbox" data-task="opencti"><span>OpenCTI يعمل، MITRE connector ناجح، وIOC تجريبي قابل للبحث.</span></label>
+      <div class="gate"><strong>بوابة النجاح:</strong> تدخل إلى UI، ترى worker/connector healthy، وتستخرج API token محدود الصلاحية لاستخدام n8n.</div>
+    </section>
+
+    <section class="section searchable" id="n8n">
+      <div class="phase">المرحلة 13</div><h2>n8n كطبقة SOAR</h2>
+      <ol class="steps"><li>جهز SOAR01 بعنوان 10.10.40.30 وثبّت Docker/Compose من المصدر الرسمي.</li><li>ابدأ بقاعدة SQLite للمختبر فقط مع volume دائم؛ استخدم PostgreSQL إذا ستشغل workflows مستمرة أو متعددة المستخدمين.</li><li>أنشئ encryption key قويًا، واضبط timezone = Asia/Riyadh، ولا تضع tokens داخل workflow JSON.</li><li>اقصر 5678 على MGMT مؤقتًا، ثم استخدم TLS reverse proxy قبل الوصول عبر NetBird.</li><li>أنشئ credentials منفصلة لـWazuh وOpenCTI والإشعارات بأقل صلاحية.</li><li>ابنِ أول workflow: Webhook Test → Normalize JSON → OpenCTI HTTP Request → IF confidence → Notification → Manual approval.</li><li>لا تجعل block/isolate تلقائيًا في البداية. الاستجابة الحساسة تحتاج approval وrollback.</li></ol>
+      <div class="copy-wrap"><button class="copy" type="button">نسخ</button><pre><code>sudo docker volume create n8n_data
+sudo docker run -d --name n8n --restart unless-stopped \
+  -p 10.10.40.30:5678:5678 \
+  -e TZ=Asia/Riyadh \
+  -e GENERIC_TIMEZONE=Asia/Riyadh \
+  -e N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true \
+  -v n8n_data:/home/node/.n8n \
+  docker.n8n.io/n8nio/n8n:latest
+
+sudo docker ps
+curl -I http://10.10.40.30:5678</code></pre></div>
+      <div class="callout warn">هذا baseline للمختبر الداخلي. بعد أول نجاح ثبّت إصدارًا محددًا بدل <code>latest</code>، ضع TLS، وخذ backup للـvolume والـworkflows والـcredentials المشفرة.</div>
+      <label class="check"><input type="checkbox" data-task="n8n"><span>n8n يعمل وworkflow تجريبي يستقبل JSON ويُرجع نتيجة.</span></label>
+      <div class="gate"><strong>بوابة النجاح:</strong> Webhook تجريبي يمر عبر كل nodes دون كشف token في execution output.</div>
+    </section>
+
+    <section class="section searchable" id="netbird">
+      <div class="phase">المرحلة 14</div><h2>NetBird للوصول الآمن</h2>
+      <p>التصميم يستخدم NetBird Cloud في البداية وNB-GW01 كـrouting peer. لا نفتح Proxmox أو Wazuh أو OpenCTI أو n8n للإنترنت.</p>
+      <ol class="steps"><li>جهز NB-GW01 على vmbr0 بعنوان 192.168.1.20/24، gateway 192.168.1.1.</li><li>ثبّت NetBird client وسجله باستخدام setup key مخصص قصير الصلاحية، ثم احذف/عطل المفتاح.</li><li>أضف static route على NB-GW01 إلى 10.10.0.0/16 عبر pfSense WAN 192.168.1.2.</li><li>في NetBird أنشئ Network باسم SOC-LAB وحدد NB-GW01 كـrouting peer.</li><li>أضف الموارد كعناوين /32: Proxmox .10، Wazuh 10.10.40.10، SO .20، n8n .30، OpenCTI .40، DC01 .10. تجنب 10.10.0.0/16 للمستخدمين.</li><li>أنشئ مجموعة SOC-Admins وسياسات ports محددة. فعّل MFA/SSO وسجل activity.</li><li>اختبر من لابتوب على شبكة جوال، ثم اختبر مستخدمًا غير مصرح وتأكد أنه مرفوض.</li></ol>
+      <div class="copy-wrap"><button class="copy" type="button">نسخ</button><pre><code>curl -fsSL https://pkgs.netbird.io/install.sh | sh
+
+read -rsp "NetBird setup key: " NETBIRD_SETUP_KEY
+sudo netbird up --setup-key "$NETBIRD_SETUP_KEY"
+unset NETBIRD_SETUP_KEY
+
+sudo ip route add 10.10.0.0/16 via 192.168.1.2
+netbird status
+ip route get 10.10.40.10</code></pre></div>
+      <p>اجعل route دائمة عبر Netplan بعد نجاح الاختبار. NetBird masquerade الافتراضي يبسط return path؛ إذا عطّلته ستحتاج return route صريحة وسيظهر source IP الحقيقي.</p>
+      <label class="check"><input type="checkbox" data-task="netbird"><span>الوصول الخارجي يعمل بأقل صلاحية ولا توجد Port Forwards عامة.</span></label>
+      <div class="gate"><strong>بوابة النجاح:</strong> SOC-Admins يصلون للواجهات المطلوبة فقط، ومجموعة أخرى لا تصل إليها.</div>
+    </section>
+
+    <section class="section searchable" id="integrations">
+      <div class="phase">المرحلة 15</div><h2>ربط مسار التنبيه والإثراء والاستجابة</h2>
+      <div class="grid three"><div class="card"><h3>Detect</h3><p>Wazuh للأجهزة وSecurity Onion للشبكة وpfSense للسياسات.</p></div><div class="card"><h3>Enrich</h3><p>n8n يستخرج IP/domain/hash ويستعلم OpenCTI بسياق وثقة ومصدر.</p></div><div class="card"><h3>Respond</h3><p>Ticket/notification أولًا، ثم approval، ثم block/isolate محدود مع rollback.</p></div></div>
+      <ol class="steps"><li>وحّد schema داخل n8n: timestamp, source, host, user, rule_id, severity, observable_type, observable_value.</li><li>استخدم Wazuh API account للقراءة فقط أو webhook integration مراجع للإصدار. لا تستخدم admin.</li><li>في OpenCTI أنشئ service account/token مخصصًا لـn8n بقراءة indicators/observables.</li><li>في n8n استخدم HTTP Request إلى <code>http://10.10.40.40:8080/graphql</code> داخليًا، Header من credential store، وquery مختبرة من OpenCTI API playground.</li><li>إذا لم يوجد IOC، أكمل الحادث بدون enrichment بدل إسقاط التنبيه.</li><li>إذا confidence عالٍ ومصدر موثوق، أنشئ ticket واطلب موافقة. لا تكتب كل alert تلقائيًا إلى OpenCTI.</li><li>سجّل decision وanalyst ووقت التنفيذ ونتيجة rollback في كل workflow.</li></ol>
+      <label class="check"><input type="checkbox" data-task="integrations"><span>أنشأت workflow end-to-end مع enrichment وapproval وaudit trail.</span></label>
+      <div class="gate"><strong>بوابة النجاح:</strong> alert تجريبي يصل n8n، يستعلم OpenCTI، ينشئ إشعارًا، ولا ينفذ حظرًا دون موافقة.</div>
+    </section>
+
+    <section class="section searchable" id="tests">
+      <div class="phase">المرحلة 16</div><h2>اختبارات القبول والكشف</h2>
+      <div class="callout danger">نفّذ الاختبارات فقط على عناوين هذا المختبر وبموافقة مالك السيرفر. لا تستخدم Kali ضد أنظمة عامة أو شبكات الجامعة/الشركة خارج النطاق.</div>
+      <div class="table-wrap"><table><thead><tr><th>الاختبار</th><th>التنفيذ</th><th>النتيجة المطلوبة</th></tr></thead><tbody>
+        <tr><td>العزل</td><td>من KALI01 جرّب MGMT/SOC ثم WEB01:80</td><td>الأول مرفوض ومسجل؛ WEB01 مسموح</td></tr><tr><td>AD/DNS</td><td><code>nltest /dsgetdc:corp.lab</code> على CLIENT01</td><td>يرجع DC01 ويطبق GPO</td></tr><tr><td>Wazuh FIM</td><td>أنشئ/عدّل ملف test في مسار مراقب على WEB01</td><td>حدث وتفاصيل المستخدم/المسار</td></tr><tr><td>Windows auth</td><td>محاولتان فاشلتان بحساب مختبر</td><td>Windows event يظهر في Wazuh دون قفل غير مقصود</td></tr><tr><td>NDR</td><td>CLIENT01 يفتح WEB01 ويحل DNS</td><td>Zeek conn/dns وSuricata عند التطابق</td></tr><tr><td>Firewall</td><td>حركة محظورة بين VLANs</td><td>pfSense deny log يصل للبحث</td></tr><tr><td>OpenCTI</td><td>ابحث عن IOC تجريبي موثق</td><td>يرجع source/confidence/relationships</td></tr><tr><td>SOAR</td><td>أرسل webhook test</td><td>Normalize → Enrich → Notify → Approval</td></tr><tr><td>NetBird</td><td>اختبار من شبكة خارجية ومستخدمين مختلفين</td><td>المصرح يصل لموارده فقط</td></tr>
+      </tbody></table></div>
+      <div class="copy-wrap"><button class="copy" type="button">نسخ</button><pre><code># من KALI01 — داخل المختبر فقط
+curl -I http://10.10.50.10
+nmap -sT -Pn -p 80,443 10.10.50.10
+
+# اختبار عدم الوصول للـSOC (يجب أن يفشل)
+curl --connect-timeout 5 -k https://10.10.40.10</code></pre></div>
+      <label class="check"><input type="checkbox" data-task="tests"><span>نفذت اختبارات القبول وسجلت Expected مقابل Actual ودليل النتيجة.</span></label>
+      <div class="gate"><strong>بوابة النجاح:</strong> جميع النتائج المطلوبة مثبتة بلقطة/سجل/رقم alert، وليس بمجرد “يبدو أنه يعمل”.</div>
+    </section>
+
+    <section class="section searchable" id="backup">
+      <div class="phase">المرحلة 17</div><h2>التقوية والنسخ الاحتياطي</h2>
+      <div class="grid two"><div class="card"><h3>Hardening</h3><ul><li>MFA على Proxmox وNetBird والحسابات الحساسة.</li><li>حسابات إدارية منفصلة وRBAC.</li><li>لا Port Forward للوحات الإدارة.</li><li>Default deny بين الزونز.</li><li>Pin للإصدارات وخطة تحديث شهرية.</li><li>حذف setup keys والتوكنات غير المستخدمة.</li></ul></div><div class="card"><h3>Backups</h3><ul><li>Proxmox configs وVM backups.</li><li>DC01 System State.</li><li>Wazuh custom rules/configuration.</li><li>OpenCTI volumes + Compose + encrypted secrets record.</li><li>n8n workflows/credentials/volume.</li><li>pfSense config.xml مشفر.</li></ul></div></div>
+      <ol class="steps"><li>أنشئ backup schedule منفصلًا عن snapshots.</li><li>احتفظ بنسخة خارج السيرفر، مشفرة، مع retention واضح.</li><li>اختبر restore لـVM صغيرة أولًا، ثم service-level restore لـn8n/OpenCTI.</li><li>وثق RPO/RTO للمختبر ومن يملك مفاتيح الاستعادة.</li></ol>
+      <label class="check"><input type="checkbox" data-task="backup"><span>أنشأت نسخًا احتياطية واختبرت استعادة فعلية.</span></label>
+      <div class="gate"><strong>بوابة النجاح:</strong> تستطيع استعادة خدمة واحدة وبياناتها بدون الاعتماد على snapshot حي.</div>
+    </section>
+
+    <section class="section searchable" id="handover">
+      <div class="phase">المرحلة 18</div><h2>التوثيق والتسليم النهائي</h2>
+      <div class="grid two"><div class="card"><h3>ملف المشروع</h3><ul><li>Network diagram وIP/VLAN matrix.</li><li>VM inventory والإصدارات.</li><li>Firewall rule matrix.</li><li>Data source catalog.</li><li>Accounts/tokens owners بدون قيم الأسرار.</li><li>Backup/restore record.</li></ul></div><div class="card"><h3>Runbooks التشغيل</h3><ul><li>بدء وإيقاف الخدمات.</li><li>التحديث والrollback.</li><li>High severity triage.</li><li>IOC enrichment.</li><li>عزل endpoint أو حظر IP بموافقة.</li><li>مراجعة أسبوعية للسعة والصحة.</li></ul></div></div>
+      <label class="check"><input type="checkbox" data-task="handover"><span>أكملت التوثيق وصورت نتائج الاختبارات وحددت الخطوة القادمة.</span></label>
+      <div class="gate"><strong>اكتمل المشروع عندما:</strong> شخص آخر يستطيع فهم الشبكة، تشغيل المختبر، إعادة اختبار detections، واستعادة خدمة اعتمادًا على وثائقك فقط.</div>
+    </section>
+
+    <section class="section searchable" id="sources">
+      <div class="phase">المراجع</div><h2>المصادر الرسمية</h2><p class="muted">الإصدارات تتغير. إذا اختلفت شاشة أو أمر، اتبع الوثيقة الرسمية الحالية وسجل الاختلاف في Change Log.</p>
+      <div class="source-list"><a href="https://pve.proxmox.com/pve-docs/pve-admin-guide.html" target="_blank" rel="noopener">Proxmox VE Administration Guide</a><a href="https://docs.netgate.com/pfsense/en/latest/recipes/virtualize-proxmox-ve.html" target="_blank" rel="noopener">Netgate: pfSense on Proxmox</a><a href="https://documentation.wazuh.com/current/quickstart.html" target="_blank" rel="noopener">Wazuh Quickstart</a><a href="https://docs.securityonion.net/en/3/main/proxmox/" target="_blank" rel="noopener">Security Onion on Proxmox</a><a href="https://docs.opencti.io/latest/deployment/installation/" target="_blank" rel="noopener">OpenCTI Installation</a><a href="https://docs.n8n.io/deploy/host-n8n/install-options/install-using-docker-compose" target="_blank" rel="noopener">n8n Docker Compose</a><a href="https://docs.netbird.io/manage/networks" target="_blank" rel="noopener">NetBird Networks and Routing Peers</a></div>
+    </section>
+  </main>
+</div>
+<div class="toast" id="toast">تم النسخ</div>
+<script>
+(()=>{const tasks=[...document.querySelectorAll('[data-task]')],bar=document.getElementById('progressBar'),txt=document.getElementById('progressText'),toast=document.getElementById('toast');function update(){let done=0;tasks.forEach(x=>{x.checked=localStorage.getItem('soc-runbook-ar-'+x.dataset.task)==='1';x.closest('.check').classList.toggle('done',x.checked);if(x.checked)done++});const pct=Math.round(done/tasks.length*100);bar.style.width=pct+'%';txt.textContent=pct+'% مكتمل ('+done+'/'+tasks.length+')'}tasks.forEach(x=>x.addEventListener('change',()=>{localStorage.setItem('soc-runbook-ar-'+x.dataset.task,x.checked?'1':'0');update()}));document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',async()=>{const t=b.parentElement.querySelector('code').innerText;try{await navigator.clipboard.writeText(t);toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),1200)}catch(e){alert('حدد النص وانسخه يدويًا')}}));document.getElementById('search').addEventListener('input',e=>{const q=e.target.value.trim().toLowerCase();document.querySelectorAll('.searchable').forEach(s=>s.classList.toggle('hidden',q&&!s.innerText.toLowerCase().includes(q)))});document.getElementById('printBtn').addEventListener('click',()=>window.print());document.getElementById('resetBtn').addEventListener('click',()=>{if(!confirm('تصفير جميع علامات التقدم؟'))return;tasks.forEach(x=>localStorage.removeItem('soc-runbook-ar-'+x.dataset.task));update()});const links=[...document.querySelectorAll('.nav a')],sections=links.map(a=>document.querySelector(a.getAttribute('href'))).filter(Boolean);new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)links.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+e.target.id))}),{rootMargin:'-25% 0px -65% 0px'}).observe(sections[0]);sections.slice(1).forEach(s=>new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)links.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+e.target.id))}),{rootMargin:'-25% 0px -65% 0px'}).observe(s));update()})();
+</script>
+</body>
+</html>
